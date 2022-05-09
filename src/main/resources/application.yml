@@ -1,0 +1,79 @@
+spring:
+  main:
+    banner-mode: "off"
+  application:
+    name: "broadcast-service"
+
+
+mongo:
+  dbName: "broadcast_db"
+
+secretsPath: ${SECRETS_PATH}
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+
+server:
+  port: 8080
+
+kafka:
+  notification-topic: notification
+  rider-status-topic: rider-job-status
+  consumerGroupId: rider-status-service-group
+  noOfConcurrentMessage: 1
+  groupInstanceId: ${HOSTNAME}
+
+redis:
+  primaryNode: ${REDIS_PRIMARY_HOST}
+  readNode: ${REDIS_READ_HOST}
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.memorynotfound: DEBUG
+    org.zalando.logbook: TRACE
+
+broadcast:
+  job:
+    time-in-seconds: 120
+  rider:
+    time-in-seconds: 30
+
+scheduler:
+  job:
+    time-in-ms: ${SCHEDULER_JOB_CLEANUP}
+  rider:
+    time-in-ms: ${SCHEDULER_RIDER_REBROADCAST}
+
+riderProfile:
+  path: ${RIDERSERVICE_BASE_PATH}/profile/
+
+jobAllocation:
+  path: ${JOBALLOCATION_BASE_PATH}/find-riders
+
+opsService:
+  path: ${OPSSERVICE_BASE_PATH}
+  cacheAge: ${OPSSERVICE_CACHE_AGE}
+
+jobService:
+  path: ${JOBSERVICE_BASE_PATH}
+
+cognito:
+  app:
+    url: ${COGNITO_URL_APP}
+  ops:
+    url: ${COGNITO_URL_OPS}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+
+opentracing:
+  spring:
+    cloud:
+      redis:
+        enabled: false

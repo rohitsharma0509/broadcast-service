@@ -1,0 +1,78 @@
+spring:
+  main:
+    banner-mode: "off"
+  application:
+    name: "broadcast-service"
+  data:
+    mongodb:
+      uri: mongodb://my-user:my-password@localhost:27019/admin
+      database: test
+
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+
+server:
+  port: 8087
+
+kafka:
+  notification-topic: notification
+  rider-status-topic: rider-job-status
+  consumerGroupId: rider-status-service-group
+  noOfConcurrentMessage: 3
+  groupInstanceId: groupId
+
+redis:
+  primaryNode: localhost
+  readNode: localhost
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.memorynotfound: DEBUG
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+
+broadcast:
+  job:
+    time-in-seconds: 150
+  rider:
+    time-in-seconds: 30
+
+scheduler:
+  job:
+    time-in-ms: 5000
+  rider:
+    time-in-ms: 5000
+
+
+riderProfile:
+  path: http://localhost:8080/profile/
+
+jobAllocation:
+  path: http://localhost:8060/profile/riders
+
+jobService:
+  path: http://localhost:8085
+
+opsService:
+  path: http://localhost:8060
+  cacheAge: 300
+
+cognito:
+  app:
+    url: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_HLDWLUDkm
+  ops:
+    url: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_dLsH3DOsm
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health

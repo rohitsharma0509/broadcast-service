@@ -1,0 +1,28 @@
+---
+# Source: environment/templates/devops-config/deployment/deployment-vars-{{env}}.yml
+# This file was generated at  using generator Version: 
+
+DEPLOYMENT:
+    ENV: perftest
+    NAMESPACE: perftest
+    CONFIG_FILES:
+        - "src/main/resources/config/broadcast-service.default.yaml"
+        - "src/main/resources/config/broadcast-service.perftest.yaml"
+APP:
+    REPLICA: 1
+    HPA:
+      ENABLED: 0
+      MIN_REPLICA: 3
+      MAX_REPLICA: 6
+      CPU_UTILIZATION: 65
+      MEMORY_UTILIZATION: 80
+    CONTAINER:
+      MEMORY:
+        REQUEST: 1Gi
+        LIMIT: 1Gi
+      CPU:
+        REQUEST: 0.5
+        LIMIT: 0.5
+    ENVIRONMENT:
+      - KEY: logs.Dir
+        VALUE: "/apps/logs/perftest/broadcast-service/"

@@ -1,0 +1,29 @@
+---
+# Source: environment/templates/devops-config/deployment/deployment-vars-{{env}}.yml
+# This file was generated at  using generator Version: 
+
+DEPLOYMENT:
+    ENV: preprod3
+    NAMESPACE: preprod3
+    CONFIG_FILES:
+        - "src/main/resources/config/broadcast-service.default.yaml"
+        - "src/main/resources/config/broadcast-service.preprod3.yaml"
+
+APP:
+  REPLICA: 30
+  HPA:
+    ENABLED: 0
+    MIN_REPLICA: 3
+    MAX_REPLICA: 6
+    CPU_UTILIZATION: 65
+    MEMORY_UTILIZATION: 80
+  CONTAINER:
+    MEMORY:
+      REQUEST: 2Gi
+      LIMIT: 4Gi
+    CPU:
+      REQUEST: 0.5
+      LIMIT: 1
+    ENVIRONMENT:
+      - KEY: logs.Dir
+        VALUE: "/apps/logs/preprod3/broadcast-service/"

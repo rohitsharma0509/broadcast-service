@@ -1,0 +1,15 @@
+---
+# Source: environment/templates/devops-config/deployment/deployment-vars-{{env}}.yml
+# This file was generated at  using generator Version: 
+
+DEPLOYMENT:
+    ENV: dev
+    NAMESPACE: dev
+    CONFIG_FILES:
+        - "src/main/resources/config/broadcast-service.default.yaml"
+        - "src/main/resources/config/broadcast-service.dev.yaml"
+
+APP:
+    ENVIRONMENT:
+      - KEY: logs.Dir
+        VALUE: "/apps/logs/dev/broadcast-service/"

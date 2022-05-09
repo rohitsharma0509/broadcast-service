@@ -1,0 +1,69 @@
+[{
+    "serviceName": "broadcast-service",
+    "archeTypeCategory": "java",     
+    "archeType": "java-gradle-service-eks",
+    "archeTypeVersion": "1.0",
+    "environments": ["ci","dev", "qa", "preprod", "prod"],
+    "metadata": {
+        "serviceId": "broadcast-service",
+        "ciNamespace": "ci",
+        "ciEnv": "ci",
+        "replica": "1",
+        "healthCheckEndPoint": "actuator/health",
+        "serviceAccount": "svc-rider-app",
+        "performanceProject": "rider-qa/broadcast-service-performance-automation",
+        "performanceFailPercentageThreshold": "10",
+        "functionalProject": "rider-qa/broadcast-service-automation",
+        "appServicePort": "8080",
+        "rootModuleDir": "./",
+        "ingressEnabled": "true",
+        "ingressPath": "broadcast-service",
+        "livenessProbe": {
+            "httpGetPath": "/actuator/health",
+            "failureThreshold": "5",
+            "initialDelaySeconds": "45",
+            "periodSeconds": "60",
+            "successThreshold": "1", 
+            "timeoutSeconds": "10"
+        },
+        "readinessProbe": {
+            "httpGetPath": "/actuator/health",
+            "failureThreshold": "5",
+            "initialDelaySeconds": "30",
+            "periodSeconds": "60",
+            "successThreshold": "1", 
+            "timeoutSeconds": "10"
+        },
+        "configFiles": [
+            "src/main/resources/config/{{serviceName}}.default.properties",
+            "src/main/resources/config/{{serviceName}}.{{env}}.properties"
+        ],
+        "containerMinMemory": "1Gi",
+        "containerMaxMemory": "1Gi",
+        "containerMinCPU": "0.5",
+        "containerMaxCPU": "0.5",
+        "namespace": "{{env}}",
+        "addtionalServiceExposedPorts": [
+            {
+                "value": "8443",
+                "description": "Additional Service Port."
+            }],
+        "additionalContainerExposedPorts": [
+            {
+                "value": "8443",
+                "description": "Additional Service Port."
+            }],
+        "environmentVars": [
+            {
+                "key": "logs.Dir",
+                "value": "/apps/logs/{{env}}/{{serviceName}}/"
+            }]
+    },
+    "metadata_ci" : {
+        "containerMinMemory": "1Gi"
+    },
+    "autoPush": {
+        "projectId": "2784",
+        "branch": "feature/onboarding-gradle"
+    } 
+}]

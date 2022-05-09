@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <springProfile name="local | test">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+  </springProfile>
+
+  <springProfile name="default">
+    <include resource="com/scb/rider/tracing/tracer/logger/base.xml"/>
+    <root level="INFO">
+      <appender-ref ref="JSONOUT"/>
+    </root>
+  </springProfile>
+</configuration>

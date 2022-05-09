@@ -1,0 +1,11 @@
+RIDERSERVICE_BASE_PATH: "http://rider-service.prod:8080"
+JOBALLOCATION_BASE_PATH: "http://job-allocation-service.prod:8080"
+OPSSERVICE_BASE_PATH: "http://operations-service.prod:8080"
+OPSSERVICE_CACHE_AGE: "300"
+SCHEDULER_JOB_CLEANUP: "2000"
+SCHEDULER_RIDER_REBROADCAST: "5000"
+JOBSERVICE_BASE_PATH: "http://job-service.prod:8080"
+COGNITO_URL_APP: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_LZUgnfEsy
+COGNITO_URL_OPS: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_Fu4N2gdAd
+REDIS_PRIMARY_HOST: rider-prod-elasticache-redis.rwdgg5.ng.0001.apse1.cache.amazonaws.com
+REDIS_READ_HOST:  rider-prod-elasticache-redis-ro.rwdgg5.ng.0001.apse1.cache.amazonaws.com

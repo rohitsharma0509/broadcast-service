@@ -1,0 +1,153 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'scala'
+    id "au.com.dius.pact" version "3.5.0"
+    id 'jacoco'
+    id "org.sonarqube" version "3.0"
+    id 'net.linguica.maven-settings' version '0.5'
+}
+
+group 'com.scb.rider'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'rider-maven-release'
+        url 'https://nexus.devops.easy2easiest.com/repository/rider-maven-release-local'
+        credentials {
+            username System.getenv("NEXUS_USER")
+            password System.getenv("NEXUS_PASSWORD")
+        }
+    }
+}
+
+ bootRun {
+	// support passing -Dsystem.property=value to bootRun task
+	systemProperties = System.properties
+}
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.kafka:spring-kafka'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+    compile "io.springfox:springfox-bean-validators:3.0.0"
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation 'net.logstash.logback:logstash-logback-encoder:5.2'
+    compile group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.4.8'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.3.5.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.3.5.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.3.5.RELEASE'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+    compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.4.0'
+    compile group: 'com.auth0', name: 'java-jwt', version: '3.12.1'
+
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-mongo', version: '4.23.0'
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '4.23.0'
+	implementation 'com.auth0:jwks-rsa:0.15.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.3.5.RELEASE'
+
+    // added to export custom metrics
+    implementation group: 'io.micrometer', name: 'micrometer-core', version: '1.6.3'
+    implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.6.3'
+    implementation 'com.scb.rider:distributed-tracing-lib:0.0.20'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    
+    testCompile('org.mockito:mockito-junit-jupiter:2.23.0')
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+    compile("org.junit.platform:junit-platform-launcher:1.6.1")
+    compile("org.junit.jupiter:junit-jupiter-engine:5.6.1")
+    testCompile('org.mockito:mockito-junit-jupiter:2.23.0')
+    compile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: '3.4.1'
+    compile group: 'org.hibernate', name: 'hibernate-validator',version: '6.1.0.Final'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'joda-time', name: 'joda-time', version: '2.3'
+    testCompile group: 'au.com.dius', name: 'pact-jvm-consumer-java8', version: '4.0.9'
+    testCompile group: 'au.com.dius', name: 'pact-jvm-consumer-junit5', version: '4.0.9'
+    compile group: 'joda-time', name: 'joda-time', version: '2.10.8'
+    testCompile ('org.junit.jupiter:junit-jupiter:5.6.0')
+}
+
+test {
+    useJUnitPlatform()
+    jacoco {
+		finalizedBy jacocoTestReport
+		destinationFile = file("build/jacoco/sonar.exec")
+	}
+	jacocoTestReport {
+		dependsOn test
+	}
+	testLogging {
+		events 'PASSED', 'FAILED', 'SKIPPED'
+	}
+}
+
+tasks.withType(Test) {
+    scanForTestClasses = false
+    include "**/*Test.class" // whatever Ant pattern matches your test class files
+}
+
+springBoot {
+    mainClassName = 'com.scb.rider.broadcast.Application'
+}
+
+jacocoTestReport {
+    executionData fileTree(buildDir).include("/jacoco/*.exec")
+    reports {
+		xml.enabled true
+		csv.enabled true
+		html.destination file("${buildDir}/jacocoHtml")
+	}
+    afterEvaluate {
+        getClassDirectories().setFrom( files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: coverageExcludes())
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.30
+			}
+		}
+	}
+	afterEvaluate {
+		getClassDirectories().setFrom(classDirectories.files.collect {
+			fileTree(dir: it, exclude: coverageExcludes())
+		})
+	}
+}
+
+check.dependsOn jacocoTestCoverageVerification
+
+static def coverageExcludes() {
+    return ["com/scb/rider/broadcast/config/**",
+            "com/scb/rider/broadcast/exception",
+            "com/scb/rider/broadcast/constants/**",
+            "com/scb/rider/broadcast/kafka/consumer/ListenerConfig.class",
+            "com/scb/rider/broadcast/Application.class",
+            "com/scb/rider/broadcast/kafka/consumer/CustomCooperativeStickyAssignor.class"]
+}
+
+sonarqube {
+    properties {
+        property 'sonar.coverage.exclusions', coverageExcludes()
+    }
+}
+
+

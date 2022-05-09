@@ -1,0 +1,11 @@
+DEPLOYMENT:
+    ENV: dev2
+    NAMESPACE: dev2
+    CONFIG_FILES:
+        - "src/main/resources/config/broadcast-service.default.yaml"
+        - "src/main/resources/config/broadcast-service.dev2.yaml"
+
+APP:
+    ENVIRONMENT:
+      - KEY: logs.Dir
+        VALUE: "/apps/logs/dev2/broadcast-service/"

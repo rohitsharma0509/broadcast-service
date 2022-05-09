@@ -1,0 +1,37 @@
+spring:
+  main:
+    banner-mode: "off"
+  application:
+    name: "job-service"
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: jobs_db
+
+redis:
+  primaryNode: localhost
+  readNode: localhost
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+
+server:
+  port: 8087
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.memorynotfound: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+
+
+DIST_TRACER_ENDPOINT: ""
+COMPANY: ""
+PROJECT_NAME: ""

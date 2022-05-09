@@ -1,0 +1,3 @@
+COMPANY: "SCB"
+PROJECT_NAME: "rider"
+DIST_TRACER_ENDPOINT: "http://jaeger-operator-jaeger-collector.default:14268/api/traces"
